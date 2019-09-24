@@ -1,28 +1,32 @@
 <?php
    $json = $_POST['json'];
 
-   /* sanity check */
    if (json_decode($json) != null)
    {
      $current_data = file_get_contents('data.json');
      $array_data = json_decode($current_data, true);
-     $record = json_decode($json, true);
-     
-     $key_ = 0;
-     foreach ($record as $k => $value) {
-         $key_ = $k;
-     }
-     $record[$key_] = 2;
+     $json = json_decode($json, true);
+     $k1 = 0;
+     $k2 = 0;
+    foreach ($array_data as $key1 => $value1) {
+      foreach ($value1 as $key2 => $value2) {
+        if($json == $key2){
+          $k1 = $key1;
+          $k2 = $key2;
+        }
+      }
+    }
+    
 
-     $key = array_search($record, $array_data);
-     unset($array_data[$key]);
-     $array_data[] = $record;
-     $final_data = json_encode($array_data);
-     file_put_contents('data.json', $final_data);
-     
-   }
-   else
-   {
-     echo 'false';
-   }
+    $array_data[$k1][$k2] = 2;
+
+    $final_data = json_encode($array_data);
+    file_put_contents('data.json', $final_data);
+
+
+  }
+
+     /*$final_data = json_encode($array_data);
+     file_put_contents('data.json', $final_data);*/
+
 ?>

@@ -6,81 +6,102 @@ $(document).ready(function(){
       });
 
       function show_btns(){
-        if(typeof(Storage) !== 'undefined'){
-          for (var i = 1; i < 4; i++){
-            var btn = IPaddress + '|' + i;
-            if (localStorage[btn]){
-              if (Number(localStorage[btn]) >= 2){
-                $("#" + i).append("changed")
-              } else {
-                $("#" + i).append("Not changed")
+          
+            $.getJSON("data.json", function (data) {
+              var status = {
+                1: 0,
+                2: 0,
+                3: 0
               }
-            } else {
-              $("#" + i).append("Not changed")
-            }
-          }
-        } else {
-          alert('Sorry, your browser does not support web storage...')
-        }
+              for (var i = 1; i < 4; i++){
+                var btn = IPaddress + '|' + i;
+
+                $.each(data, function (index, value) {
+                  $.each(value, function (inx, val) {
+                      if(btn == inx){
+                        status[i] = 1;
+                        if(val == 2){
+                          $("#" + i).empty()
+                          $("#" + i).append("changed")
+                        }else{
+                          $("#" + i).empty()
+                          $("#" + i).append("Not changed")
+                        }
+                      }else if(status[i] == 0){
+                        $("#" + i).empty()
+                        $("#" + i).append("Not changed")
+                      }
+                  });
+              });
+
+              $.each(status, function (index, value) {
+                if(value == 0){
+                  $("#" + index).empty()
+                  $("#" + index).append("Not changed")
+                }
+              })
+              }
+              
+            });
       }
 
       function clickCounter(id) {
         var button = IPaddress + '|' + id;
         if (typeof(Storage) !== "undefined") {
-          if(localStorage[button]){
-            var bool;
-            var record = {
-              [button]: 1
-            }
-
+            
             $.ajax({
               type : "POST",
               url : "check_record.php",
               data : {
-                  json : JSON.stringify(record)
+                  json : JSON.stringify(button)
               },
               success: function(data){
-                bool = data;
-              }
-            });
-
-            if(localStorage[button] == 1 || bool == "true"){
-              localStorage[button] = 2
-              $("#" + id).empty()
-              $("#" + id).append("changed")
-
-              var record_to_update = {
-                [button]: 1
-              }
-              $.ajax({
-                type : "POST",
-                url : "update_record.php",
-                data : {
-                    json : JSON.stringify(record_to_update)
+                if(data == 1){
+                  localStorage[button] = 2
+                  $("#" + id).empty()
+                  $("#" + id).append("changed")
+    
+                  $.ajax({
+                    type : "POST",
+                    url : "update_record.php",
+                    data : {
+                        json : JSON.stringify(button)
+                    },success: function(data){
+                      console.log(data)
+                    }
+                  });
+    
+                } else {
+                localStorage[button] = 1
+                var data = {
+                  [button]: 1
                 }
-              });
-
-            }
-          } else {
-            localStorage[button] = 1
-            var data = {
-              [button]: 1
-            }
-            $.ajax({
-              type : "POST",
-              url : "json.php",
-              data : {
-                  json : JSON.stringify(data)
+                $.ajax({
+                  type : "POST",
+                  url : "json.php",
+                  data : {
+                      json : JSON.stringify(data)
+                  }
+                });
+              }
               }
             });
-          }} else {
-          alert("Sorry, your browser does not support web storage...");
-        }
+
+            
+         }else {
+        alert("Sorry, your browser does not support web storage...");
       }
+    }
+
+
+
+
+
+
+
 
       setTimeout(() => {
         show_btns()
-        console.log(localStorage)
       }, 1000);
 
       for(let i = 1; i<4; i++){
