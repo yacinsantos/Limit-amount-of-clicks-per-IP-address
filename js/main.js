@@ -1,5 +1,7 @@
 $(document).ready(function(){
 
+      
+
       function show_btns(){
           
             $.getJSON("data.json", function (data) {
@@ -13,6 +15,7 @@ $(document).ready(function(){
 
                 $.each(data, function (index, value) {
                   $.each(value, function (inx, val) {
+                    console.log(btn)
                       if(btn == inx){
                         status[i] = 1;
                         if(val == 2){
@@ -91,15 +94,12 @@ $(document).ready(function(){
 
 
 
+    var IPaddress;
+    $.getJSON("https://api.ipify.org/?format=json", function (data) {
+      IPaddress = data.ip;
+      show_btns()
 
-
-
-
-      var IPaddress;
-      $.getJSON("http://jsonip.com?callback=?", function (data) {
-        IPaddress = data.ip;
-        show_btns()
-      });
+    });
 
       for(let i = 1; i<4; i++){
         $("#" + i).click((e) => {
