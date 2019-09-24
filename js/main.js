@@ -1,10 +1,5 @@
 $(document).ready(function(){
 
-      var IPaddress;
-      $.getJSON("http://jsonip.com?callback=?", function (data) {
-        IPaddress = data.ip;
-      });
-
       function show_btns(){
           
             $.getJSON("data.json", function (data) {
@@ -100,9 +95,11 @@ $(document).ready(function(){
 
 
 
-      setTimeout(() => {
+      var IPaddress;
+      $.getJSON("http://jsonip.com?callback=?", function (data) {
+        IPaddress = data.ip;
         show_btns()
-      }, 1000);
+      });
 
       for(let i = 1; i<4; i++){
         $("#" + i).click((e) => {
