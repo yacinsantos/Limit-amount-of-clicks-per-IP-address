@@ -21,9 +21,10 @@ $(document).ready(function(){
           var status = {
             1: 0,
             2: 0,
-            3: 0
+            3: 0,
+            4: 0//ADD THIS LINE
           }
-          for (var i = 1; i < 4; i++){
+          for (var i = 1; i < 5; i++){// INCREMENT THE NUMBER
             var btn = IPaddress + '|' + i;
 
             $.each(data, function (index, value) {
@@ -33,8 +34,23 @@ $(document).ready(function(){
                     status[i] = 1;
                     if(val == 2){
                       $("#" + i).empty()
-                      $("#" + i).append("New Link")
-                      $("#" + i).attr("href", "http://www.google.com/")
+                      if(i == 1){
+                        $("#" + i).append("New Link")
+                        $("#" + i).attr("href", "http://www.google.com/")
+                      }
+                      if(i == 2){
+                        $("#" + i).append("New Link")
+                        $("#" + i).attr("href", "http://www.google.com/")
+                      }
+                      if(i == 3){
+                        $("#" + i).append("New Link")
+                        $("#" + i).attr("href", "http://www.google.com/")
+                      }
+                      /*  ********      ADD THIS IF STATEMENT     this link is after the 2 times click     ******* */
+                      if(i == 4){
+                        $("#" + i).append("New Link")
+                        $("#" + i).attr("href", "http://www.google.com/")
+                      }
                     }
               }
           });
@@ -55,19 +71,33 @@ $(document).ready(function(){
               json : JSON.stringify(button)
           },
           success: function(data){
-            if(data == 1){
+            var result = JSON.parse(data)
+            if(result.bool == 1){
               localStorage[button] = 2
               $("#" + id).empty()
-              $("#" + id).append("New Link")
-              $("#" + id).attr("href", "http://www.google.com/")
+              if(id == 1){
+                $("#" + id).append("New Link")
+                $("#" + id).attr("href", "http://www.google.com/")
+              }
+              if(id == 2){
+                $("#" + id).append("New Link")
+                $("#" + id).attr("href", "http://www.google.com/")
+              }
+              if(id == 3){
+                $("#" + id).append("New Link")
+                $("#" + id).attr("href", "http://www.google.com/")
+              }
+              /*  ********      ADD THIS IF STATEMENT  ALSO  this link is after the 2 times click      ******* */
+              if(id == 4){
+                $("#" + id).append("New Link")
+                $("#" + id).attr("href", "http://www.google.fr/")
+              }
 
               $.ajax({
                 type : "POST",
                 url : "update_record.php",
                 data : {
                     json : JSON.stringify(button)
-                },success: function(data){
-                  console.log(data)
                 }
               });
 
@@ -84,6 +114,13 @@ $(document).ready(function(){
               }
             });
           }
+          
+          if(result.times == 2){
+            popuplogin(href)
+          }else{
+            window.open(href, '_blank')
+          }
+          
           }
         });
 
@@ -92,8 +129,6 @@ $(document).ready(function(){
     alert("Sorry, your browser does not support web storage...");
   }
 
-  //window.location = href;
-  popuplogin(href)
 }
 
 
@@ -106,7 +141,7 @@ $.getJSON("https://api.ipify.org/?format=json", function (data) {
 
 });
 
-  for(let i = 1; i<4; i++){
+  for(let i = 1; i<5; i++){//INCREMENT THIS NUMBER
     $("#" + i).click((e) => {
       var href = e.target.href;
       e.preventDefault()
