@@ -2,6 +2,19 @@ $(document).ready(function(){
 
       
 
+  function popuplogin(url)
+  {
+      var w = 800;
+      var h = 600;
+      var title = 'Social popup';
+      var left = (screen.width / 2) - (w / 2);
+      var top = (screen.height / 2) - (h / 2);
+      window.open(url, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=' + w + ', height=' + h + ', top=' + top + ', left=' + left);
+  }         
+					
+	
+
+
   function show_btns(){
       
         $.getJSON("data.json", function (data) {
@@ -79,7 +92,8 @@ $(document).ready(function(){
     alert("Sorry, your browser does not support web storage...");
   }
 
-  window.location = href;
+  //window.location = href;
+  popuplogin(href)
 }
 
 
