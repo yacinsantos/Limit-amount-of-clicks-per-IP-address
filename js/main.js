@@ -1,5 +1,8 @@
 $(document).ready(function(){
 
+
+  var number_of_clicks = 4; /**  PUT HERE THE NUMBER OF CLICKS  **/
+
       
 
   function popuplogin(url)
@@ -22,17 +25,16 @@ $(document).ready(function(){
             1: 0,
             2: 0,
             3: 0,
-            4: 0//ADD THIS LINE
+            4: 0//ADD THIS LINE FOR NEW LINK
           }
-          for (var i = 1; i < 5; i++){// INCREMENT THE NUMBER
+          for (var i = 1; i <= 4; i++){// INCREMENT THE NUMBER
             var btn = IPaddress + '|' + i;
 
             $.each(data, function (index, value) {
               $.each(value, function (inx, val) {
-                console.log(btn)
                   if(btn == inx){
                     status[i] = 1;
-                    if(val == 2){
+                    if(val == number_of_clicks){
                       $("#" + i).empty()
                       if(i == 1){
                         $("#" + i).append("New Link")
@@ -46,7 +48,7 @@ $(document).ready(function(){
                         $("#" + i).append("New Link")
                         $("#" + i).attr("href", "http://www.google.com/")
                       }
-                      /*  ********      ADD THIS IF STATEMENT     this link is after the 2 times click     ******* */
+                      /*  ********      ADD THIS IF STATEMENT     this link is after the 2 times click     ******* **/
                       if(i == 4){
                         $("#" + i).append("New Link")
                         $("#" + i).attr("href", "http://www.google.com/")
@@ -72,8 +74,8 @@ $(document).ready(function(){
           },
           success: function(data){
             var result = JSON.parse(data)
-            if(result.bool == 1){
-              localStorage[button] = 2
+            if(result.bool == 1 && result.times == (number_of_clicks-1)){       
+              localStorage[button] = (Number(result.times)+1)
               $("#" + id).empty()
               if(id == 1){
                 $("#" + id).append("New Link")
@@ -95,13 +97,13 @@ $(document).ready(function(){
 
               $.ajax({
                 type : "POST",
-                url : "update_record.php",
+                url : "increment_click.php",
                 data : {
                     json : JSON.stringify(button)
                 }
               });
 
-            } else {
+            } else if (result.bool == 0){
             localStorage[button] = 1
             var data = {
               [button]: 1
@@ -113,9 +115,19 @@ $(document).ready(function(){
                   json : JSON.stringify(data)
               }
             });
+          }else if(result.times < number_of_clicks){     
+            localStorage[button] = (Number(result.times)+1)
+            $.ajax({
+              type : "POST",
+              url : "increment_click.php",
+              data : {
+                  json : JSON.stringify(button)
+              }
+            });
+
           }
           
-          if(result.times == 2){
+          if(result.times == number_of_clicks){
             popuplogin(href)
           }else{
             window.open(href, '_blank')
@@ -141,7 +153,7 @@ $.getJSON("https://api.ipify.org/?format=json", function (data) {
 
 });
 
-  for(let i = 1; i<5; i++){//INCREMENT THIS NUMBER
+  for(let i = 1; i<+ 4; i++){//INCREMENT THIS NUMBER
     $("#" + i).click((e) => {
       var href = e.target.href;
       e.preventDefault()
